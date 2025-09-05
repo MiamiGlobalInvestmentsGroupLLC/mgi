@@ -1,0 +1,68 @@
+// Prisma schema for MGI SaaS Ultra
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Company {
+  id               String    @id @default(cuid())
+  name             String
+  email            String?   @unique
+  passwordHash     String?
+  systemPrompt     String?
+  botName          String?   @default("Assistant")
+  themePrimary     String?   @default("#2463eb")
+  logoUrl          String?
+  suggested        Json?
+  plan             String?   @default("free")
+  defaultLang      String?   @default("ar") // 'ar' or 'en'
+  isPaused         Boolean   @default(false)
+  dailyLimit       Int?      @default(500)
+  monthlyLimit     Int?      @default(5000)
+  watermarkEnabled Boolean   @default(false)
+  watermarkUrl     String?   @default("https://miamiglobalgroup.com")
+  createdAt        DateTime  @default(now())
+
+  usages           Usage[]
+  docs             Document[]
+  otps             Otp[]
+}
+
+model Document {
+  id         String   @id @default(cuid())
+  company    Company  @relation(fields: [companyId], references: [id])
+  companyId  String
+  source     String   // 'upload' | 'url'
+  title      String
+  url        String?
+  text       String
+  createdAt  DateTime @default(now())
+}
+
+model Usage {
+  id        String   @id @default(cuid())
+  company   Company  @relation(fields: [companyId], references: [id])
+  companyId String
+  day       DateTime
+  count     Int      @default(0)
+
+  @@unique([companyId, day])
+}
+
+model Otp {
+  id         String    @id @default(cuid())
+  company    Company?  @relation(fields: [companyId], references: [id])
+  companyId  String?
+  email      String
+  code       String
+  expiresAt  DateTime
+  consumed   Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+
+  @@index([email, code])
+}
