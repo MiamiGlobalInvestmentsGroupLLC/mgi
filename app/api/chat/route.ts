@@ -3,7 +3,8 @@ import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { startOfUTCday } from '@/lib/date';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
+
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
