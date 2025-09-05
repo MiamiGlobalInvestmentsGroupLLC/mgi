@@ -1,0 +1,2 @@
+export function extractKeywords(q:string){ const words=(q||'').toLowerCase().match(/[a-z\u0600-\u06FF]{3,}/g)||[]; const stop=new Set(['the','and','for','with','حول','هذا','هذه','الى','على','من','في','عن','ما','لم','لن','كان','كانت','هناك']); const uniq=Array.from(new Set(words.filter(w=>!stop.has(w)))); return uniq.slice(0,8);} 
+export function stripHtml(html:string){ return html.replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ');} 
