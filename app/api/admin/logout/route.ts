@@ -1,1 +1,0 @@
-export const runtime='nodejs'; export async function POST(){ return new Response(JSON.stringify({ok:true}),{headers:{'Set-Cookie':'admin=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0'}}); }
